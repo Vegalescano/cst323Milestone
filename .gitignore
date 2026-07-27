@@ -1,0 +1,14 @@
+target/
+.classpath
+.project
+.settings/
+bin/
+*.log
+*.tmp
+.metadata/
+.idea/
+*.iml
+.env
+application-local.properties
+Thumbs.db
+.DS_Store

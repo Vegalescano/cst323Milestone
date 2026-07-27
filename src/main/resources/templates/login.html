@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CST323Inventory Login</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="/login">CST323 Inventory Store App MILESTONE 2</a>
+    </div>
+</nav>
+
+<main class="container py-5">
+    <div class="row mb-4">
+        <div class="col-lg-12 text-center">
+            <h1 class="page-title">CST323Inventory</h1>
+            <p class="lead">
+                Log in or create a customer account to manage inventory, customers, and orders.
+            </p>
+        </div>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+
+        <!-- Login Form -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <strong>Login</strong>
+                </div>
+
+                <div class="card-body">
+                    <div class="alert alert-danger" th:if="${loginError}" th:text="${loginError}"></div>
+                    <div class="alert alert-success" th:if="${registerSuccess}" th:text="${registerSuccess}"></div>
+
+                    <form method="post" action="/login">
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input class="form-control" name="username" placeholder="Enter username" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input class="form-control" type="password" name="password" placeholder="Enter password" required>
+                        </div>
+
+                        <button class="btn btn-primary w-100" type="submit">Login</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Account Form -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <strong>Create Username and Password</strong>
+                </div>
+
+                <div class="card-body">
+                    <div class="alert alert-danger" th:if="${registerError}" th:text="${registerError}"></div>
+
+                    <form method="post" action="/register">
+                        <div class="mb-3">
+                            <label class="form-label">New Username</label>
+                            <input class="form-control" name="username" placeholder="Create username" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">New Password</label>
+                            <input class="form-control" type="password" name="password" placeholder="Create password" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Role</label>
+                            <select class="form-select" name="role">
+                                <option value="CUSTOMER">Customer</option>
+                                <option value="EMPLOYEE">Employee</option>
+                                <option value="MANAGER">Manager</option>
+                                <option value="ADMIN">Administrator</option>
+                            </select>
+                        </div>
+
+                        <hr>
+
+                        <p class="small-note">
+                            Customer information is required when the role is Customer.
+                        </p>
+
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <label class="form-label">Customer First Name</label>
+                                <input class="form-control" name="customerFirstName" placeholder="First name">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Customer Last Name</label>
+                                <input class="form-control" name="customerLastName" placeholder="Last name">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label">Customer Email</label>
+                                <input class="form-control" type="email" name="customerEmail" placeholder="email@example.com">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label">Customer Phone</label>
+                                <input class="form-control" name="customerPhone" placeholder="Phone number">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label">Customer Address</label>
+                                <input class="form-control" name="customerAddress" placeholder="Address">
+                            </div>
+                        </div>
+
+                        <button class="btn btn-success w-100 mt-3" type="submit">Create Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+</body>
+</html>
