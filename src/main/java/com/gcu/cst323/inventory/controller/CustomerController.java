@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/customers")
@@ -86,12 +87,19 @@ public class CustomerController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id,
-                         HttpSession session) {
+                         HttpSession session,
+                         RedirectAttributes redirectAttributes) {
         if (!canManageCustomers(session)) {
             return "redirect:/dashboard";
         }
 
-        customerService.delete(id);
+        try {
+            customerService.delete(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Customer deleted successfully.");
+        } catch (IllegalStateException exception) {
+            redirectAttributes.addFlashAttribute("errorMessage", exception.getMessage());
+        }
+
         return "redirect:/customers";
     }
 }

@@ -2,6 +2,7 @@ package com.gcu.cst323.inventory.service;
 
 import com.gcu.cst323.inventory.model.Customer;
 import com.gcu.cst323.inventory.repository.CustomerRepository;
+import com.gcu.cst323.inventory.repository.OrderRecordRepository;
 import java.util.Comparator;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -9,9 +10,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomerService {
     private final CustomerRepository customerRepository;
+    private final OrderRecordRepository orderRecordRepository;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository,
+                           OrderRecordRepository orderRecordRepository) {
         this.customerRepository = customerRepository;
+        this.orderRecordRepository = orderRecordRepository;
     }
 
     public List<Customer> findAll(String search) {
@@ -41,6 +45,13 @@ public class CustomerService {
     }
 
     public void delete(Long id) {
+        if (orderRecordRepository.existsByCustomer_CustomerId(id)) {
+            throw new IllegalStateException(
+                    "Cannot delete this customer because the customer already has orders. " +
+                    "Keep the customer record for order history, or delete the related orders first."
+            );
+        }
+
         customerRepository.deleteById(id);
     }
 
