@@ -1,4 +1,10 @@
 target/
+azure-deploy/
+azure-deploy.zip
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+*.publishsettings
+
 .classpath
 .project
 .settings/
