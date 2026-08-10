@@ -1,0 +1,73 @@
+name: Milestone 4 Build and Deploy to Azure
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy CST323Inventory to Azure
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Give Maven Wrapper permission
+        run: chmod +x ./mvnw
+
+      - name: Build Spring Boot app
+        run: ./mvnw -B clean package -DskipTests
+
+      - name: Create Azure deployment package
+        run: |
+          mkdir azure-deploy
+          cp target/*.jar azure-deploy/app.jar
+
+          cat > azure-deploy/web.config <<'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <configuration>
+            <system.webServer>
+              <handlers>
+                <add name="httpPlatformHandler"
+                     path="*"
+                     verb="*"
+                     modules="httpPlatformHandler"
+                     resourceType="Unspecified" />
+              </handlers>
+
+              <httpPlatform processPath="%JAVA_HOME%\bin\java.exe"
+                            arguments="-Dserver.port=%HTTP_PLATFORM_PORT% -Dspring.profiles.active=azure -jar &quot;%HOME%\site\wwwroot\app.jar&quot;"
+                            stdoutLogEnabled="true"
+                            stdoutLogFile="%HOME%\LogFiles\stdout"
+                            startupTimeLimit="180"
+                            processesPerApplication="1">
+              </httpPlatform>
+            </system.webServer>
+          </configuration>
+          EOF
+
+          cd azure-deploy
+          zip -r ../azure-deploy.zip .
+
+      - name: Upload deployment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: azure-deploy-package
+          path: azure-deploy.zip
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: cst323inventory-milestone3
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: azure-deploy.zip
