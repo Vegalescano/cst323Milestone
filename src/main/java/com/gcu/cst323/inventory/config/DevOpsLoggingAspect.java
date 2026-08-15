@@ -14,6 +14,11 @@ import org.springframework.stereotype.Component;
  */
 @Aspect
 @Component
+/**
+ * DevOps logging aspect for Milestone 4 and Milestone 5.
+ * Logs entry, exit, and errors for controller, service, and repository methods
+ * using SLF4J and Logback.
+ */
 public class DevOpsLoggingAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(DevOpsLoggingAspect.class);
@@ -23,6 +28,14 @@ public class DevOpsLoggingAspect {
         "execution(* com.gcu.cst323.inventory.service..*(..)) || " +
         "execution(* com.gcu.cst323.inventory.repository..*(..))"
     )
+    /**
+     * Logs method entry and exit for intercepted controller, service, and repository methods.
+     * If an exception occurs, the method logs the error and rethrows the exception.
+     *
+     * @param joinPoint intercepted method call
+     * @return result returned by the intercepted method
+     * @throws Throwable if the intercepted method throws an exception
+     */
     public Object logEntryAndExit(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 

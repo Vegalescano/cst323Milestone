@@ -14,14 +14,25 @@ import java.util.Comparator;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+/**
+ * Business service responsible for order workflows.
+ * Handles order lookup, order creation, order item creation, status updates, deletion, and open order counts.
+ */
 @Service
 public class OrderService {
     private final OrderRecordRepository orderRecordRepository;
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
     private final UserAccountRepository userAccountRepository;
-
+    /**
+     * Creates an OrderService with repositories required for order workflows.
+     *
+     * @param orderRecordRepository repository used to access order records
+     * @param orderItemRepository repository used to access order items
+     * @param customerRepository repository used to access customer records
+     * @param productRepository repository used to access product records
+     * @param userAccountRepository repository used to access user account records
+     */
     public OrderService(OrderRecordRepository orderRecordRepository,
                         CustomerRepository customerRepository,
                         ProductRepository productRepository,
@@ -31,18 +42,37 @@ public class OrderService {
         this.productRepository = productRepository;
         this.userAccountRepository = userAccountRepository;
     }
-
+    /**
+     * Finds all order records.
+     *
+     * @return list of all orders
+     */
     public List<OrderRecord> findAll() {
         return orderRecordRepository.findAll().stream()
                 .sorted(Comparator.comparing(OrderRecord::getOrderDate).reversed())
                 .toList();
     }
-
+    /**
+     * Finds an order by id.
+     *
+     * @param id order id to search for
+     * @return matching order record
+     * @throws IllegalArgumentException if the order is not found
+     */
     public OrderRecord findById(Long id) {
         return orderRecordRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found: " + id));
     }
-
+    /**
+     * Creates a new order using the selected customer, product, and quantity.
+     * The method creates an order record, creates an order item, calculates totals,
+     * and saves the completed order.
+     *
+     * @param customerId selected customer id
+     * @param productId selected product id
+     * @param quantity ordered quantity
+     * @return saved order record
+     */
     @Transactional
     public OrderRecord createOrder(Long customerId, Long productId, Integer quantity) {
         if (quantity == null || quantity <= 0) {
@@ -76,17 +106,31 @@ public class OrderService {
 
         return orderRecordRepository.save(order);
     }
-
+    /**
+     * Updates the status of an existing order.
+     *
+     * @param orderId order id to update
+     * @param status new order status
+     * @return saved order record with updated status
+     */
     public OrderRecord updateStatus(Long orderId, String status) {
         OrderRecord order = findById(orderId);
         order.setStatus(status);
         return orderRecordRepository.save(order);
     }
-
+    /**
+     * Deletes an order by id.
+     *
+     * @param id order id to delete
+     */
     public void delete(Long id) {
         orderRecordRepository.deleteById(id);
     }
-
+    /**
+     * Counts orders with an open or pending status.
+     *
+     * @return number of open orders
+     */
     public long countOpenOrders() {
         return orderRecordRepository.countByStatusIgnoreCase("Pending");
     }

@@ -16,6 +16,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "product")
+/**
+ * Gets the total order amount.
+ *
+ * @return total order amount
+ */
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,7 +54,16 @@ public class Product {
 
     public Product() {
     }
-
+    /**
+     * Creates a product with inventory and pricing information.
+     *
+     * @param productName product name
+     * @param description product description
+     * @param price product price
+     * @param quantityInStock quantity currently in stock
+     * @param reorderLevel reorder level used to identify low stock
+     * @param active active status for the product
+     */
     public Product(String productName, String description, BigDecimal price,
                    Integer quantityInStock, Integer reorderLevel, Boolean active) {
         this.productName = productName;
@@ -59,74 +73,151 @@ public class Product {
         this.reorderLevel = reorderLevel;
         this.active = active;
     }
-
+    /**
+     * Creates a product with inventory and pricing information.
+     *
+     * @param productName product name
+     * @param description product description
+     * @param price product price
+     * @param quantityInStock quantity currently in stock
+     * @param reorderLevel reorder level used to identify low stock
+     * @param active active status for the product
+     * 
+     *  * Determines whether the product quantity is at or below the reorder level.
+     *
+     * @return true when the product is low stock, otherwise false
+     */
     public boolean isLowStock() {
         if (quantityInStock == null || reorderLevel == null) {
             return false;
         }
         return quantityInStock <= reorderLevel;
     }
-
+    /**
+     * Gets the product id.
+     *
+     * @return product id
+     */
     public Long getProductId() {
         return productId;
     }
-
+    /**
+     * Sets the product id.
+     *
+     * @param productId product id to store
+     */
     public void setProductId(Long productId) {
         this.productId = productId;
     }
-
+    /**
+     * Sets the product id.
+     *
+     * @param productId product id to store
+     */
     public String getProductName() {
         return productName;
     }
-
+    /**
+     * Gets the product name.
+     *
+     * @return product name
+     */
     public void setProductName(String productName) {
         this.productName = productName;
     }
-
+    /**
+     * Sets the product name.
+     *
+     * @param productName product name to store
+     */
     public String getDescription() {
         return description;
     }
-
+    /**
+     * Gets the product description.
+     *
+     * @return product description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
-
+    /**
+     * Sets the product description.
+     *
+     * @param description product description to store
+     */
     public BigDecimal getPrice() {
         return price;
     }
-
+    /**
+     * Gets the product price.
+     *
+     * @return product price
+     */
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
-
+    /**
+     * Sets the product price.
+     *
+     * @param price product price to store
+     */
     public Integer getQuantityInStock() {
         return quantityInStock;
     }
-
+    /**
+     * Gets the quantity currently in stock.
+     *
+     * @return quantity in stock
+     */
     public void setQuantityInStock(Integer quantityInStock) {
         this.quantityInStock = quantityInStock;
     }
-
+    /**
+     * Gets the reorder level used for low-stock checks.
+     *
+     * @return reorder level
+     */
     public Integer getReorderLevel() {
         return reorderLevel;
     }
-
+    /**
+     * Gets the reorder level used for low-stock checks.
+     *
+     * @return reorder level
+     */
     public void setReorderLevel(Integer reorderLevel) {
         this.reorderLevel = reorderLevel;
     }
-
+    /**
+     * Sets the reorder level used for low-stock checks.
+     *
+     * @param reorderLevel reorder level to store
+     */
     public Boolean getActive() {
         return active;
     }
-
+    /**
+     * Sets the reorder level used for low-stock checks.
+     *
+     * @param reorderLevel reorder level to store
+     */
     public void setActive(Boolean active) {
         this.active = active;
     }
-
+    /**
+     * Gets the order items that reference this product.
+     *
+     * @return list of order items using this product
+     */
     public List<OrderItem> getOrderItems() {
         return orderItems;
     }
-
+    /**
+     * Gets the order items that reference this product.
+     *
+     * @return list of order items using this product
+     */
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
     }

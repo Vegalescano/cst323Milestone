@@ -12,14 +12,24 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+/**
+ * Controller responsible for login, account registration, dashboard display, and logout.
+ * Handles the main entry points for public and authenticated users.
+ */
 @Controller
 public class HomeController {
     private final AuthService authService;
     private final ProductService productService;
     private final CustomerService customerService;
     private final OrderService orderService;
-
+    /**
+     * Creates a HomeController with services used for authentication and dashboard summaries.
+     *
+     * @param authService service used for registration and login authentication
+     * @param productService service used to retrieve product summary data
+     * @param customerService service used to retrieve customer summary data
+     * @param orderService service used to retrieve order summary data
+     */
     public HomeController(AuthService authService,
                           ProductService productService,
                           CustomerService customerService,
@@ -29,12 +39,24 @@ public class HomeController {
         this.customerService = customerService;
         this.orderService = orderService;
     }
-
+    /**
+     * Displays the login and create account page.
+     *
+     * @return login page template
+     */
     @GetMapping({"/", "/login"})
     public String loginPage() {
         return "login";
     }
-
+    /**
+     * Authenticates the user and creates a logged in session when credentials are valid.
+     *
+     * @param username username entered by the user
+     * @param password password entered by the user
+     * @param session current HTTP session used to store logged in user details
+     * @param model Spring MVC model used to pass login error messages
+     * @return redirect to dashboard when login succeeds, otherwise login page
+     */
     @PostMapping("/login")
     public String login(@RequestParam String username,
                         @RequestParam String password,
@@ -58,7 +80,20 @@ public class HomeController {
 
         return "redirect:/dashboard";
     }
-
+    /**
+     * Registers a new user account and optionally creates linked customer information.
+     *
+     * @param username new username entered by the user
+     * @param password new password entered by the user
+     * @param role role selected for the new account
+     * @param firstName customer first name
+     * @param lastName customer last name
+     * @param email customer email address
+     * @param phone customer phone number
+     * @param address customer address
+     * @param model Spring MVC model used to pass registration error messages
+     * @return redirect to login page after successful registration, otherwise login page
+     */
     @PostMapping("/register")
     public String register(@RequestParam String username,
                            @RequestParam String password,
@@ -88,7 +123,13 @@ public class HomeController {
 
         return "login";
     }
-
+    /**
+     * Displays the authenticated dashboard with summary counts and low stock information.
+     *
+     * @param session current HTTP session containing the logged in user
+     * @param model Spring MVC model used to pass dashboard data to the view
+     * @return dashboard page or redirect to login when the user is not authenticated
+     */
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model) {
         Object loggedInUser = session.getAttribute("loggedInUser");
@@ -113,7 +154,12 @@ public class HomeController {
 
         return "dashboard";
     }
-
+    /**
+     * Ends the current user session and returns the user to the login page.
+     *
+     * @param session current HTTP session to invalidate
+     * @return redirect to login page
+     */
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();

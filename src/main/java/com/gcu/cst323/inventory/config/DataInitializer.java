@@ -11,6 +11,11 @@ import java.math.BigDecimal;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+/**
+ * Loads sample application data when the application starts.
+ * This class creates starter users, customers, products, and orders
+ * for testing the inventory system locally and in the cloud.
+ */
 @Component
 public class DataInitializer implements CommandLineRunner {
     private final UserAccountRepository userAccountRepository;
@@ -18,7 +23,15 @@ public class DataInitializer implements CommandLineRunner {
     private final ProductRepository productRepository;
     private final OrderService orderService;
     private final AuthService authService;
-
+    /**
+     * Creates a DataInitializer with the repositories and services required
+     * to seed users, customers, products, and orders.
+     *
+     * @param userAccountRepository repository used to access user account records
+     * @param customerRepository repository used to access customer records
+     * @param productRepository repository used to access product records
+     * @param orderService service used to create starter order records
+     */
     public DataInitializer(UserAccountRepository userAccountRepository,
                            CustomerRepository customerRepository,
                            ProductRepository productRepository,
@@ -30,7 +43,13 @@ public class DataInitializer implements CommandLineRunner {
         this.orderService = orderService;
         this.authService = authService;
     }
-
+    
+    /**
+     * Runs after the Spring Boot application starts and inserts sample data
+     * when the database does not already contain records.
+     * @param args command line arguments passed by Spring Boot
+     * @throws Exception if startup data cannot be loaded
+     */
     @Override
     public void run(String... args) {
         if (userAccountRepository.findByUsername("admin").isEmpty()) {

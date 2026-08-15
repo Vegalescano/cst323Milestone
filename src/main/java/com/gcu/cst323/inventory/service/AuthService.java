@@ -10,12 +10,22 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
-
+/**
+ * Finds a user account by username.
+ *
+ * @param username username to search for
+ * @return optional user account if found
+ */
 @Service
 public class AuthService {
     private final UserAccountRepository userAccountRepository;
     private final CustomerRepository customerRepository;
-
+    /**
+     * Creates an AuthService with repositories required for account and customer access.
+     *
+     * @param userAccountRepository repository used to access user account records
+     * @param customerRepository repository used to access customer records
+     */
     public AuthService(UserAccountRepository userAccountRepository,
                        CustomerRepository customerRepository) {
         this.userAccountRepository = userAccountRepository;
@@ -25,7 +35,19 @@ public class AuthService {
     public UserAccount register(String username, String password, String role) {
         return register(username, password, role, null, null, null, null, null);
     }
-
+    /**
+     * Registers a new user account and creates linked customer information when needed.
+     *
+     * @param username username for the new account
+     * @param password plain text password entered by the user
+     * @param role role assigned to the new account
+     * @param firstName customer first name
+     * @param lastName customer last name
+     * @param email customer email address
+     * @param phone customer phone number
+     * @param address customer address
+     * @return saved user account
+     */
     public UserAccount register(String username,
                                 String password,
                                 String role,
@@ -91,7 +113,13 @@ public class AuthService {
 
         return userAccountRepository.save(user);
     }
-
+    /**
+     * Authenticates a user by comparing the entered password with the stored password hash.
+     *
+     * @param username username entered by the user
+     * @param password plain text password entered by the user
+     * @return optional user account when the credentials are valid
+     */
     public Optional<UserAccount> authenticate(String username, String password) {
         String cleanUsername = username == null ? "" : username.trim();
         String cleanPassword = password == null ? "" : password.trim();
@@ -122,7 +150,12 @@ public class AuthService {
 
         return Optional.empty();
     }
-
+    /**
+     * Finds a user account by username.
+     *
+     * @param username username to search for
+     * @return optional user account if found
+     */
     public Optional<UserAccount> findByUsername(String username) {
         String cleanUsername = username == null ? "" : username.trim();
 
@@ -132,7 +165,12 @@ public class AuthService {
 
         return userAccountRepository.findByUsername(cleanUsername);
     }
-
+    /**
+     * Creates a hash value for a plain text password.
+     *
+     * @param password plain text password to hash
+     * @return hashed password value
+     */
     public String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
