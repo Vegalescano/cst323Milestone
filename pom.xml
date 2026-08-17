@@ -15,7 +15,7 @@
     <artifactId>CST323Inventory</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>CST323Inventory</name>
-    <description>CST323Inventory - CST-323 Milestone 2</description>
+    <description>CST323Inventory - CST-323 Milestone 5</description>
 
     <properties>
         <java.version>17</java.version>
